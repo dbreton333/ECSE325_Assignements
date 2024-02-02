@@ -58,6 +58,11 @@ public class MatrixMultiplication {
 		}
 	}
 
+	/**
+	 * Prints a matrix
+	 * @param matrix is the matrix to be printed
+	 * */
+
 	private static void printMatrix(double[][] matrix) {
         for (double[] row : matrix) {
             for (double val : row) {
@@ -69,6 +74,15 @@ public class MatrixMultiplication {
     }
 
 
+	/**
+	 * Returns the result of multiplying a row by a column
+	 * @param a is the first matrix
+	 * @param b is the second matrix
+	 * @param i is the row of the first matrix
+	 * @param j is the column of the second matrix
+	 * @return the result of the multiplication
+	 * */
+
 	private static double multiplyRowByColumn(double[][] a, double[][] b, int i, int j) {
 		double sum = 0;
 		for (int k = 0; k < MATRIX_SIZE; k++) {
@@ -76,6 +90,13 @@ public class MatrixMultiplication {
 		}
 		return sum;
 	}
+
+	/**
+	 * Compares two matrices and returns true if they are equal
+	 * @param matrix1 is the first matrix
+	 * @param matrix2 is the second matrix
+	 * @return true if the matrices are equal, false otherwise
+	 * */
 
 	private static boolean areMatricesEqual(double[][] matrix1, double[][] matrix2) {
 		if (matrix1.length != matrix2.length || matrix1[0].length != matrix2[0].length) {
