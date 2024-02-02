@@ -9,7 +9,7 @@ public class MatrixMultiplication {
 	private static final int MATRIX_SIZE = 2000;
 	private static final boolean print = false;
 	private static final boolean parallel = true;
-	private static final boolean sequential = false;
+	private static final boolean sequential = true;
 
     public static void main(String[] args) {
 		
