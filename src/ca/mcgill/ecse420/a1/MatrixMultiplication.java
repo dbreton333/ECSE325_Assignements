@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 public class MatrixMultiplication {
 	
-	private static final int NUMBER_THREADS = 20;
+	private static final int NUMBER_THREADS = 7;
 	private static final int MATRIX_SIZE = 2000;
 	private static final boolean print = false;
 	private static final boolean parallel = true;
