@@ -26,7 +26,7 @@ public class Bakerylock {
         do{
             conflict = false;
             for (int k = 0; k < n; k++) {
-                if (k != threadId && flag.get(k) && (label.get(k) < label.get(threadId) || (label.get(k) == label.get(threadId) && k < threadId))) {
+                if (k != threadId && flag.get(k) && label.get(k) > label.get(threadId)){
                     conflict = true;
                     break;
                 }
