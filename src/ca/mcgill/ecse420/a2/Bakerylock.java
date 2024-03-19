@@ -22,7 +22,6 @@ public class Bakerylock {
         flag.set(threadId, true);
         label.set(threadId, Collections.max(label) + 1);
 
-        //use a do while instead of a for loop to avoid busy waiting
         boolean conflict;
         do{
             conflict = false;
