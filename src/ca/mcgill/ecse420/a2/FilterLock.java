@@ -68,14 +68,6 @@ public class FilterLock {
             threads[i] = t;
             t.start();
         }
-
-        for (Thread thread : threads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
     
 }

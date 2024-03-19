@@ -6,8 +6,10 @@ public class Bakerylock {
 
     List<Boolean> flag;
     List<Integer> label;
+    int n;
 
     public Bakerylock(int n) {
+        this.n = n;
         this.flag = Collections.synchronizedList(new ArrayList<Boolean>(n));
         this.label = Collections.synchronizedList(new ArrayList<Integer>(n));
         for (int i = 0; i < n; i++) {
@@ -19,16 +21,22 @@ public class Bakerylock {
     public void lock(int threadId) {
         flag.set(threadId, true);
         label.set(threadId, Collections.max(label) + 1);
-        flag.set(threadId, false);
-        for (int k = 0; k < label.size(); k++) {
-            while (k != threadId && flag.get(k) && (label.get(k) < label.get(threadId) || (label.get(k) == label.get(threadId) && k < threadId))) {
-                // busy wait
+
+        //use a do while instead of a for loop to avoid busy waiting
+        boolean conflict;
+        do{
+            conflict = false;
+            for (int k = 0; k < n; k++) {
+                if (k != threadId && flag.get(k) && (label.get(k) < label.get(threadId) || (label.get(k) == label.get(threadId) && k < threadId))) {
+                    conflict = true;
+                    break;
+                }
             }
-        }
+        }while(conflict);
     }
 
     public void unlock(int threadId) {
-        label.set(threadId, 0);
+        flag.set(threadId, false);
     }
 
     public static void main(String[] args) {
@@ -42,14 +50,14 @@ public class Bakerylock {
             final int threadId = i;
             Thread t = new Thread(() -> {
                 while(true){
-                lock.lock(threadId);
-                System.out.println("Thread " + threadId + " is in critical section");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                lock.unlock(threadId);
+                    lock.lock(threadId);
+                    System.out.println("Thread " + threadId + " is in critical section");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    lock.unlock(threadId);
                 }
             });
             threads[i] = t;
