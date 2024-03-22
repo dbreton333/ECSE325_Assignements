@@ -7,6 +7,8 @@ public class Bakerylock {
     List<Boolean> flag;
     List<Integer> label;
     int n;
+    private static int counter = 0;
+    private static int ITERATIONS = 10;
 
     public Bakerylock(int n) {
         this.n = n;
@@ -39,29 +41,44 @@ public class Bakerylock {
     }
 
     public static void main(String[] args) {
-        int n = 5;
-        Bakerylock lock = new Bakerylock(n);
-        Thread[] threads = new Thread[n];
+       int n = 5;
+       Bakerylock lock = new Bakerylock(n);
+       Thread[] threads = new Thread[n];
 
-        for (int i = 0; i < n; i++) {
-            System.out.println("Starting thread " + i);
+       for (int i = 0; i < n; i++) {
+           System.out.println("Starting thread " + i);
 
-            final int threadId = i;
-            Thread t = new Thread(() -> {
-                while(true){
-                    lock.lock(threadId);
-                    System.out.println("Thread " + threadId + " is in critical section");
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    lock.unlock(threadId);
-                }
-            });
-            threads[i] = t;
-            t.start();
-        }
+           final int threadId = i;
+           Thread t = new Thread(() -> {
+               for (int j = 0; j < ITERATIONS; j++) {
+               lock.lock(threadId);
+               try {
+                   System.out.println("Thread " + threadId + " is in critical section");
+                   counter++;
+                   Thread.sleep(1000);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }finally{
+                   lock.unlock(threadId);
+               }
+               } 
+           });
+           threads[i] = t;
+           t.start();
+       }
+
+       for (Thread thread : threads) {
+           try {
+               thread.join();
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+       }
+       
+       System.out.println("Expected counter value: " + (n * ITERATIONS) + ", Actual counter value: " + counter);
+       if (counter != n * ITERATIONS) {
+           throw new AssertionError("The lock did not provide mutual exclusion.");
+       }
     }
     
 }
