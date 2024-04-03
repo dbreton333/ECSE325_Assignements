@@ -45,9 +45,11 @@ public class FilterLock {
         level.set(i, 0);
     }
 
+    // Test the Bakery lock 
 
     public static void main(String[] args) {
-    
+        
+        // number of threads
         int n = 5;
         FilterLock lock = new FilterLock(n);
         Thread[] threads = new Thread[n];
