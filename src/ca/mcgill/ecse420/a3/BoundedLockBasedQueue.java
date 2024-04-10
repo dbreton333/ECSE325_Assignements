@@ -52,7 +52,7 @@ public class BoundedLockBasedQueue<T> {
                 notEmpty.await();
             }
             item = queue[head];
-            queue[head] = null; // Help GC
+            queue[head] = null;
             head = (head + 1) % capacity;
             if (size.getAndDecrement() == capacity) {
                 mustWakeEnqueuers = true;
