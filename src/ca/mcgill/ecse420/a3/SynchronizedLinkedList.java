@@ -148,7 +148,6 @@ public class SynchronizedLinkedList<T> {
             System.out.println("Task 2 checking for element 3: " + list.contains("3"));
         };
 
-        //add a item task
         Runnable task3 = () -> {
             System.out.println("Task 4 checking for element 4: " + list.contains("4"));
         };
