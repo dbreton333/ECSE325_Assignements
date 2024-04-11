@@ -78,25 +78,14 @@ public class MatrixVectorMultiplication {
 
         @SuppressWarnings("unchecked")
         Future<Integer>[] futures = new Future[n];
-        
+
         for (int i = 0; i < n; i++){
             int row = i;
 
             futures[i] = executor.submit(() -> {
                 int sum = 0;
-                Future<Integer>[] add_future = new Future[n];
                 for (int j = 0; j < n; j++) {
-                    int col = j
-                    add_future[col] = executor.submit(() -> {
-                        return A[row][j] * B[j];
-                    });
-                }
-                for (int j = 0; j < n; j++) {
-                    try {
-                        sum += add_future[j].get();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    sum += A[row][j] * B[j];
                 }
                 return sum;
             });
