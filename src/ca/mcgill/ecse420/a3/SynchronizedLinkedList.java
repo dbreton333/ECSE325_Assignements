@@ -1,5 +1,7 @@
 
 package ca.mcgill.ecse420.a3;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 
 class Node<T> {
@@ -9,7 +11,6 @@ class Node<T> {
     ReentrantLock lock;
 
     Node(T item) {
-
         this.item = item;
         this.next = null;
         this.lock = new ReentrantLock();
@@ -107,18 +108,16 @@ public class SynchronizedLinkedList<T> {
     public boolean contains(T item) {
         Node<T> pred, curr;
         int key = item.hashCode();
-        pred = head;
-        curr = pred.next;
+        curr = head;
         try {
-            pred.lock();
             curr.lock();
             
             //find the node with the key
             while (curr.key < key) {
-                pred.unlock();
                 pred = curr;
                 curr = curr.next;
                 curr.lock();
+                pred.unlock();
             }
             
             if (curr.key == key && curr.item.equals(item)){
@@ -127,13 +126,41 @@ public class SynchronizedLinkedList<T> {
             return false;
            
         } finally {
-            pred.unlock();
             curr.unlock();
         }
     }
 
-    public static void main(String[] args) {
-      
-      
+    public static void main(String[] args) { 
+        SynchronizedLinkedList<String> list = new SynchronizedLinkedList<>();
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+
+        // Adding elements to the list
+        list.add("1");
+        list.add("2");
+        list.add("3");
+
+        // Creating tasks to concurrently check for element existence
+        Runnable task1 = () -> {
+            System.out.println("Task 1 checking for element 2: " + list.contains("2"));
+        };
+
+        Runnable task2 = () -> {
+            System.out.println("Task 2 checking for element 3: " + list.contains("3"));
+        };
+
+        //add a item task
+        Runnable task3 = () -> {
+            System.out.println("Task 4 checking for element 4: " + list.contains("4"));
+        };
+        
+
+        // Submitting tasks to the executor
+        executor.submit(task1);
+        executor.submit(task2);
+        executor.submit(task3);
+
+        // Shutting down the executor
+        executor.shutdown();
     }
+        
 }
