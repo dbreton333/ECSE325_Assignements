@@ -29,7 +29,6 @@ public class MatrixVectorMultiplication {
         // Check if the results are equal
         System.out.println("Are sequential and parallel multiplication results the same? " + vectorAreEqual(CSequential, CParallel));
 
-        
     }
 
     public static int[][] generateRandomMatrix(int n, int m) {
@@ -85,8 +84,19 @@ public class MatrixVectorMultiplication {
 
             futures[i] = executor.submit(() -> {
                 int sum = 0;
+                Future<Integer>[] add_future = new Future[n];
                 for (int j = 0; j < n; j++) {
-                    sum += A[row][j] * B[j];
+                    int col = j
+                    add_future[col] = executor.submit(() -> {
+                        return A[row][j] * B[j];
+                    });
+                }
+                for (int j = 0; j < n; j++) {
+                    try {
+                        sum += add_future[j].get();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 return sum;
             });
